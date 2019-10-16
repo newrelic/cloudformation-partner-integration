@@ -1,0 +1,28 @@
+{
+
+    "ApiKey": "TestingNonsenseKey",
+    "PolicyId": 1,
+    "NrqlCondition": {
+        "Id": 1,
+        "Type": "static",
+        "Name": "TestNRQLCondition",
+        "RunbookUrl": "www.example.com/runbook",
+        "ExpectedGroups": 0,
+        "IgnoreOverlap": true,
+        "Enabled": true,
+        "ValueFunction": "string",
+        "Terms": [
+            {
+                "Duration": "1",
+                "Operator": "above",
+                "Priority": "low",
+                "Threshold": "20",
+                "TimeFunction": "all"
+            }
+        ],
+        "Nrql": {
+            "Query": "SELECT count(*) from AwsLambdaInvocationError",
+            "SinceValue": "3"
+        }
+    }
+}
