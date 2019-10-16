@@ -15,6 +15,7 @@ out/
 
 # auto-generated files
 target/
+/NrqlAlertCondition/newrelic-alerts-nrqlalert.zip
 
 # our logs
 rpdk.log

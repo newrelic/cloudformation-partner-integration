@@ -12,12 +12,12 @@ Resources:
     Properties:
       Handler: com.newrelic.alerts.nrqlalert.HandlerWrapper::handleRequest
       Runtime: java8
-      CodeUri: ./target/newrelic-alerts-nrqlalertcondition-1.0-SNAPSHOT.jar
+      CodeUri: ./target/newrelic-alerts-nrqlalert-1.0-SNAPSHOT.jar
 
   TestEntrypoint:
     Type: AWS::Serverless::Function
     Properties:
       Handler: com.newrelic.alerts.nrqlalert.HandlerWrapper::testEntrypoint
       Runtime: java8
-      CodeUri: ./target/newrelic-alerts-nrqlalertcondition-1.0-SNAPSHOT.jar
+      CodeUri: ./target/newrelic-alerts-nrqlalert-1.0-SNAPSHOT.jar
 

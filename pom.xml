@@ -199,14 +199,6 @@
                 </executions>
             </plugin>
         </plugins>
-        <resources>
-            <resource>
-                <directory>${project.basedir}</directory>
-                <includes>
-                    <include>newrelic-alerts-nrqlalert.json</include>
-                </includes>
-            </resource>
-        </resources>
     </build>
 </project>
 
