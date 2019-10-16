@@ -1,0 +1,114 @@
+{
+  "typeName": "NewRelic::Alerts::NrqlAlert",
+  "description": "Resource schema to create a NewRelic NRQL-based Alert",
+  "definitions": {
+    "Term": {
+      "type": "object",
+      "properties": {
+        "Duration": {
+          "type": "string"
+        },
+        "Operator": {
+          "type": "string"
+        },
+        "Priority": {
+          "type": "string"
+        },
+        "Threshold": {
+          "type": "string"
+        },
+        "TimeFunction": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "properties": {
+    "ApiKey": {
+      "description": "API authentication header",
+      "type": "string"
+    },
+    "PolicyId": {
+      "description": "Policy ID",
+      "type": "integer"
+    },
+    "NrqlCondition": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "description": "The name of the alert",
+          "type": "string"
+        },
+        "Id": {
+          "description": "Condition Id Returned from NewRelic",
+          "type": "integer"
+        },
+        "Type": {
+          "type": "string"
+        },
+        "RunbookUrl": {
+          "description": "Link to runbook for resolving this error",
+          "type": "string"
+        },
+        "Enabled": {
+          "description": "True when the alert is active",
+          "type": "boolean"
+        },
+        "ExpectedGroups": {
+          "description": "TODO",
+          "type": "integer"
+        },
+        "IgnoreOverlap": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "ValueFunction": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "Terms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Term"
+          }
+        },
+        "Nrql": {
+          "type": "object",
+          "properties": {
+            "Query": {
+              "type": "string"
+            },
+            "SinceValue": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "ApiKey",
+    "PolicyId",
+    "NrqlCondition"
+  ],
+  "primaryIdentifier": [
+    "/properties/NrqlCondition/Id"
+  ],
+  "handlers": {
+      "create": {
+          "permissions": [
+              "CreateAlert"
+          ]
+      },
+      "delete": {
+          "permissions": [
+              "DeleteAlert"
+          ]
+      },
+    "update": {
+      "permissions": [
+        "UpdateAlert"
+      ]
+    }
+  }
+}

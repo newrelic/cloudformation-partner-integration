@@ -1,12 +1,20 @@
-target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
-dependency-reduced-pom.xml
-buildNumber.properties
-.mvn/timing.properties
+# macOS
+.DS_Store
+._*
 
-# Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
-!/.mvn/wrapper/maven-wrapper.jar
+# Maven outputs
+.classpath
+
+# IntelliJ
+*.iml
+.idea
+out.java
+out/
+.settings
+.project
+
+# auto-generated files
+target/
+
+# our logs
+rpdk.log
