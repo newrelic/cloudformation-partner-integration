@@ -157,11 +157,6 @@ buildscript:
     license_url: https://www.bouncycastle.org/license.html
     project_url: https://www.bouncycastle.org/index.html
 
-  org.checkerframework:checker-qual:2.8.1:
-    license: GPLv2 with Classpath Exception
-    license_url: https://github.com/typetools/checker-framework/blob/master/LICENSE.txt
-    project_url: https://checkerframework.org/
-
   org.codehaus.mojo:animal-sniffer-annotations:1.18:
     license: MIT
     license_url: http://opensource.org/licenses/MIT
@@ -207,16 +202,6 @@ dependencies:
     license: Apache 2.0
     license_url: https://github.com/joel-costigliola/assertj-core/blob/master/LICENSE.txt
     project_url: https://github.com/joel-costigliola/assertj-core
-
-  org.junit.jupiter:junit-jupiter-api:5.5.2:
-    license: EPLv2.0
-    license_url: https://github.com/junit-team/junit5/blob/master/LICENSE.md
-    project_url: https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/
-
-  org.junit.platform:junit-platform-commons:1.5.2:
-    license: Manually reviewed
-    license_url: https://github.com/junit-team/junit5/blob/master/LICENSE.md
-    project_url: https://github.com/junit-team/junit5/
 
   org.mockito:mockito-core:2.26.0:
     license: MIT
