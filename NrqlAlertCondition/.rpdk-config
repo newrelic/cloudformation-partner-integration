@@ -1,0 +1,14 @@
+{
+    "typeName": "NewRelic::Alerts::NrqlAlert",
+    "language": "java",
+    "runtime": "java8",
+    "entrypoint": "com.newrelic.alerts.nrqlalert.HandlerWrapper::handleRequest",
+    "settings": {
+        "namespace": [
+            "com",
+            "newrelic",
+            "alerts",
+            "nrqlalert"
+        ]
+    }
+}
