@@ -17,6 +17,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
+/**
+ * Abstracted client that handles all http interactions.
+ */
 public class AlertApiClient {
 
     public static final String USER_AGENT = "User-Agent";
