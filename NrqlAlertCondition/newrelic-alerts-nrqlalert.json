@@ -95,19 +95,24 @@
     "/properties/NrqlCondition/Id"
   ],
   "handlers": {
-      "create": {
-          "permissions": [
-              "CreateAlert"
-          ]
-      },
-      "delete": {
-          "permissions": [
-              "DeleteAlert"
-          ]
-      },
+    "create": {
+      "permissions": [
+        "newrelic:CreateAlert"
+      ]
+    },
+    "read": {
+      "permissions": [
+        "newrelic:ReadAlert"
+      ]
+    },
     "update": {
       "permissions": [
-        "UpdateAlert"
+        "newrelic:UpdateAlert"
+      ]
+    },
+    "delete": {
+      "permissions": [
+        "newrelic:DeleteAlert"
       ]
     }
   }

@@ -3,7 +3,9 @@ package com.newrelic.alerts.nrqlalert.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.newrelic.alerts.nrqlalert.Nrql;
 import com.newrelic.alerts.nrqlalert.NrqlCondition;
+import com.newrelic.alerts.nrqlalert.Term;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -51,5 +53,32 @@ public class NewRelicNrqlCondition {
         this.setValueFunction(modelNrqlCondition.getValueFunction());
         this.setTerms(modelNrqlCondition.getTerms().stream().map(NewRelicTerm::new).collect(Collectors.toList()));
         this.setNrql(new NewRelicNrql(modelNrqlCondition.getNrql()));
+    }
+
+    public void updateNrqlCondition(NrqlCondition other) {
+        other.setType(this.getType());
+        other.setEnabled(this.getEnabled());
+        other.setName(this.getName());
+        other.setRunbookUrl(this.getRunbookUrl());
+        other.setValueFunction(this.getValueFunction());
+        other.setExpectedGroups(this.getExpectedGroups());
+        other.setIgnoreOverlap(this.getIgnoreOverlap());
+
+        Nrql nrql = new Nrql(this.getNrql().getQuery(), this.getNrql().getSinceValue());
+        other.setNrql(nrql);
+
+        // update all terms
+        List<Term> terms = this.getTerms().stream()
+                .map(t -> {
+                    Term term = new Term();
+                    term.setDuration(t.getDuration());
+                    term.setOperator(t.getOperator());
+                    term.setPriority(t.getPriority());
+                    term.setThreshold(t.getThreshold());
+                    term.setTimeFunction(t.getTimeFunction());
+                    return term;
+                })
+                .collect(Collectors.toList());
+        other.setTerms(terms);
     }
 }
