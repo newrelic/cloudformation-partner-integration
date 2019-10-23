@@ -3,6 +3,7 @@
     "language": "java",
     "runtime": "java8",
     "entrypoint": "com.newrelic.alerts.nrqlalert.HandlerWrapper::handleRequest",
+    "testEntrypoint": "com.newrelic.alerts.nrqlalert.HandlerWrapper::testEntrypoint",
     "settings": {
         "namespace": [
             "com",

@@ -29,10 +29,7 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
     private AlertApiClient alertApiClient;
 
     public UpdateHandler() {
-        this.alertApiClient = new AlertApiClient(
-                "https://api.newrelic.com/v2/alerts_nrql_conditions",
-                HttpClients.createDefault()
-        );
+        this.alertApiClient = new AlertApiClient(AlertApiClient.URL_PREFIX, HttpClients.createDefault());
     }
 
     // this will allow us to mock the client and not make real actual calls when testing

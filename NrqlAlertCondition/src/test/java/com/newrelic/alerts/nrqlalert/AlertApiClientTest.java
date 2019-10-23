@@ -7,6 +7,7 @@ import com.newrelic.alerts.nrqlalert.model.NewRelicTerm;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ContentType;
@@ -37,6 +38,7 @@ class AlertApiClientTest {
     private AlertApiClient alertApiClient;
     private HttpClient mockHttpClient;
     private NewRelicNrqlCondition nrqlCondition;
+    private NewRelicNrqlCondition nrqlCondition2;
 
     @BeforeEach
     void setUp() {
@@ -47,6 +49,18 @@ class AlertApiClientTest {
         List<NewRelicTerm> terms = Lists.newArrayList(new NewRelicTerm());
         nrqlCondition = new NewRelicNrqlCondition(
                 "test",
+                null,
+                "a_condition",
+                "http://runbook.example.com",
+                true,
+                0,
+                true,
+                "valueFunction",
+                terms,
+                new NewRelicNrql()
+        );
+        nrqlCondition2 = new NewRelicNrqlCondition(
+                "test2",
                 null,
                 "a_condition",
                 "http://runbook.example.com",
@@ -68,6 +82,7 @@ class AlertApiClientTest {
 
         JSONObject createdCondition = alertApiClient.create(nrqlCondition, TEST_API_KEY, TEST_POLICY_ID);
 
+        //Note: this isn't what the actual response looks like, but it meets the structural requirements
         assertTrue(createdCondition.getBoolean("isTest"));
 
         ArgumentCaptor<HttpPost> requestCaptor = ArgumentCaptor.forClass(HttpPost.class);
@@ -155,5 +170,30 @@ class AlertApiClientTest {
         } catch (AlertApiException e) {
             assertEquals("Failed to delete alert condition with ID: 1234", e.getMessage());
         }
+    }
+
+    @Test
+    void read() throws IOException, AlertApiException {
+        nrqlCondition.setId(1);
+        nrqlCondition2.setId(2);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String responseString = objectMapper.writeValueAsString(Collections.singletonMap("nrql_conditions",
+                Lists.newArrayList(nrqlCondition, nrqlCondition2)));
+
+        BasicHttpResponse okResponse = new BasicHttpResponse(
+                new BasicStatusLine(HttpVersion.HTTP_1_1, 200, "OK"));
+        okResponse.setEntity(new StringEntity(responseString, ContentType.APPLICATION_JSON));
+        when(mockHttpClient.execute(any(HttpGet.class))).thenReturn(okResponse);
+
+        NewRelicNrqlCondition fetchedCondition = alertApiClient.get(TEST_API_KEY, TEST_POLICY_ID, 2);
+
+        ArgumentCaptor<HttpGet> requestCaptor = ArgumentCaptor.forClass(HttpGet.class);
+        verify(mockHttpClient).execute(requestCaptor.capture());
+        HttpGet request = requestCaptor.getValue();
+
+        assertEquals("http://example.com?policy_id=6789&page=1", request.getURI().toString());
+
+        assertEquals(nrqlCondition2, fetchedCondition);
     }
 }
