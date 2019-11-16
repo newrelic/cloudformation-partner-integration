@@ -1,6 +1,6 @@
 package com.newrelic.alerts.nrqlalert;
 
-import com.amazonaws.cloudformation.proxy.*;
+import software.amazon.cloudformation.proxy.*;
 import com.newrelic.alerts.nrqlalert.model.NewRelicNrql;
 import com.newrelic.alerts.nrqlalert.model.NewRelicNrqlCondition;
 import com.newrelic.alerts.nrqlalert.model.NewRelicTerm;

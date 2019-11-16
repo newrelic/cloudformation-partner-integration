@@ -1,6 +1,6 @@
 package com.newrelic.alerts.nrqlalert;
 
-import com.amazonaws.cloudformation.proxy.*;
+import software.amazon.cloudformation.proxy.*;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.impl.client.HttpClients;
 
