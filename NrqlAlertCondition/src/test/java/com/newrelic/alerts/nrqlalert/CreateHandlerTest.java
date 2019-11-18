@@ -1,6 +1,6 @@
 package com.newrelic.alerts.nrqlalert;
 
-import com.amazonaws.cloudformation.proxy.*;
+import software.amazon.cloudformation.proxy.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newrelic.alerts.nrqlalert.model.NewRelicNrqlCondition;
 import org.json.JSONArray;

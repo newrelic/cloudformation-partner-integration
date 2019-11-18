@@ -55,15 +55,12 @@
           "type": "boolean"
         },
         "ExpectedGroups": {
-          "description": "TODO",
           "type": "integer"
         },
         "IgnoreOverlap": {
-          "description": "TODO",
           "type": "boolean"
         },
         "ValueFunction": {
-          "description": "TODO",
           "type": "string"
         },
         "Terms": {
