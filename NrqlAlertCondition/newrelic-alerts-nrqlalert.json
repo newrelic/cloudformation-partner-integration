@@ -112,5 +112,6 @@
         "newrelic:DeleteAlert"
       ]
     }
-  }
+  },
+  "additionalProperties": false
 }
