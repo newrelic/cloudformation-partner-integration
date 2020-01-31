@@ -16,6 +16,8 @@ out/
 # auto-generated files
 target/
 /NrqlAlertCondition/newrelic-alerts-nrqlalert.zip
+/NrqlAlertCondition/resource-role.yaml
+.hypothesis/
 
 # our logs
 rpdk.log
