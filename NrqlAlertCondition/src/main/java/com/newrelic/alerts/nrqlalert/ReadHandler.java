@@ -1,26 +1,16 @@
 package com.newrelic.alerts.nrqlalert;
 
-import software.amazon.cloudformation.proxy.*;
 import com.newrelic.alerts.nrqlalert.model.NewRelicNrqlCondition;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.impl.client.HttpClients;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import software.amazon.cloudformation.proxy.*;
 
 public class ReadHandler extends BaseHandler<CallbackContext> {
-
     private AlertApiClient alertApiClient;
 
     public ReadHandler() {
-        this.alertApiClient = new AlertApiClient(
-                AlertApiClient.URL_PREFIX,
-                HttpClients.createDefault()
-        );
+        this.alertApiClient =
+                new AlertApiClient(AlertApiClient.URL_PREFIX, HttpClients.createDefault());
     }
 
     // this will allow us to mock the client and not make real actual calls when testing
@@ -42,7 +32,10 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
         try {
             final int conditionId = model.getNrqlCondition().getId();
             final int policyId = model.getPolicyId();
-            logger.log(String.format("Attempting to read alert condition for condition %d from policy %d", conditionId, policyId));
+            logger.log(
+                    String.format(
+                            "Attempting to read alert condition for condition %d from policy %d",
+                            conditionId, policyId));
             NewRelicNrqlCondition condition = alertApiClient.get(apiKey, policyId, conditionId);
 
             NrqlCondition nrqlCondition = model.getNrqlCondition();

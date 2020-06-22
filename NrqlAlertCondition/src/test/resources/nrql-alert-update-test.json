@@ -1,5 +1,4 @@
 {
-
     "ApiKey": "TestingNonsenseKey",
     "PolicyId": 1,
     "NrqlCondition": {
@@ -10,19 +9,19 @@
         "ExpectedGroups": 0,
         "IgnoreOverlap": true,
         "Enabled": true,
-        "ValueFunction": "string",
+        "ViolationTimeLimitSeconds": 3600,
         "Terms": [
             {
-                "Duration": "1",
+                "Duration": 1,
                 "Operator": "above",
-                "Priority": "low",
-                "Threshold": "20",
+                "Priority": "warning",
+                "Threshold": 20,
                 "TimeFunction": "all"
             }
         ],
         "Nrql": {
             "Query": "SELECT count(*) from AwsLambdaInvocationError",
-            "SinceValue": "3"
+            "SinceValue": 3
         }
     }
 }

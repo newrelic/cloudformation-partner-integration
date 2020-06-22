@@ -1,13 +1,11 @@
 package com.newrelic.alerts.nrqlalert;
 
-import software.amazon.cloudformation.proxy.*;
+import java.io.IOException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.impl.client.HttpClients;
-
-import java.io.IOException;
+import software.amazon.cloudformation.proxy.*;
 
 public class DeleteHandler extends BaseHandler<CallbackContext> {
-
     private final AlertApiClient alertApiClient;
 
     public DeleteHandler() {
@@ -21,10 +19,10 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
 
     @Override
     public ProgressEvent<ResourceModel, CallbackContext> handleRequest(
-        final AmazonWebServicesClientProxy proxy,
-        final ResourceHandlerRequest<ResourceModel> request,
-        final CallbackContext callbackContext,
-        final Logger logger) {
+            final AmazonWebServicesClientProxy proxy,
+            final ResourceHandlerRequest<ResourceModel> request,
+            final CallbackContext callbackContext,
+            final Logger logger) {
 
         final ResourceModel model = request.getDesiredResourceState();
 
@@ -34,7 +32,8 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
         // Try to actually hit the endpoint!
         OperationStatus status = OperationStatus.SUCCESS;
         try {
-            logger.log(String.format("Attempting to delete alert condition with ID: %d", conditionId));
+            logger.log(
+                    String.format("Attempting to delete alert condition with ID: %d", conditionId));
             alertApiClient.remove(apiKey, conditionId);
             logger.log(String.format("Deleted alert condition with ID: %d", conditionId));
         } catch (IOException e) {
@@ -46,8 +45,8 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
         }
 
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
-            .resourceModel(model)
-            .status(status)
-            .build();
+                .resourceModel(model)
+                .status(status)
+                .build();
     }
 }

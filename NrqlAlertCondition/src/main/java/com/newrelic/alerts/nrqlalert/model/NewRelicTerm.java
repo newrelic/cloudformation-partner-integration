@@ -14,16 +14,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class NewRelicTerm {
-
-    private String duration;
-
+    private Integer duration;
     private String operator;
-
     private String priority;
-
-    private String threshold;
-
+    private Double threshold;
     private String timeFunction;
+
     public NewRelicTerm(Term modelTerm) {
         this.setDuration(modelTerm.getDuration());
         this.setOperator(modelTerm.getOperator());

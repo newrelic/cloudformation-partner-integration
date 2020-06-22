@@ -1,103 +1,48 @@
 {
-  "typeName": "NewRelic::Alerts::NrqlAlert",
-  "description": "Resource schema to create a NewRelic NRQL-based Alert",
+  "additionalProperties": false,
   "definitions": {
     "Term": {
-      "type": "object",
       "properties": {
         "Duration": {
-          "type": "string"
+          "description": "This is the time (in minutes) for the condition to persist before triggering an event.",
+          "minimum": 0,
+          "type": "integer"
         },
         "Operator": {
+          "description": "This determines what comparison will be used between the ValueFunction and the Threshold value to trigger an event.",
+          "enum": ["above", "below", "equal"],
           "type": "string"
         },
         "Priority": {
+          "description": "This corresponds to the severity level selected when setting the Threshold values.",
+          "enum": ["critical", "warning"],
           "type": "string"
         },
         "Threshold": {
-          "type": "string"
+          "description": "This is the threshold that the ValueFunction must be compared to using the Operator for an event to be triggered.",
+          "minimum": 0,
+          "type": "number"
         },
         "TimeFunction": {
+          "description": "This corresponds to the Threshold values.",
+          "enum": ["all", "any"],
           "type": "string"
         }
-      }
+      },
+      "type": "object"
     }
   },
-  "properties": {
-    "ApiKey": {
-      "description": "API authentication header",
-      "type": "string"
-    },
-    "PolicyId": {
-      "description": "Policy ID",
-      "type": "integer"
-    },
-    "NrqlCondition": {
-      "type": "object",
-      "properties": {
-        "Name": {
-          "description": "The name of the alert",
-          "type": "string"
-        },
-        "Id": {
-          "description": "Condition Id Returned from NewRelic",
-          "type": "integer"
-        },
-        "Type": {
-          "type": "string"
-        },
-        "RunbookUrl": {
-          "description": "Link to runbook for resolving this error",
-          "type": "string"
-        },
-        "Enabled": {
-          "description": "True when the alert is active",
-          "type": "boolean"
-        },
-        "ExpectedGroups": {
-          "description": "TODO",
-          "type": "integer"
-        },
-        "IgnoreOverlap": {
-          "description": "TODO",
-          "type": "boolean"
-        },
-        "ValueFunction": {
-          "description": "TODO",
-          "type": "string"
-        },
-        "Terms": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Term"
-          }
-        },
-        "Nrql": {
-          "type": "object",
-          "properties": {
-            "Query": {
-              "type": "string"
-            },
-            "SinceValue": {
-              "type": "string"
-            }
-          }
-        }
-      }
-    }
-  },
-  "required": [
-    "ApiKey",
-    "PolicyId",
-    "NrqlCondition"
-  ],
-  "primaryIdentifier": [
-    "/properties/NrqlCondition/Id"
-  ],
+  "description": "Resource schema to create a NewRelic NRQL-based Alert",
+  "documentationUrl": "https://docs.newrelic.com/docs/integrations/amazon-integrations/aws-integrations-list/aws-cloudformation-integration",
   "handlers": {
     "create": {
       "permissions": [
         "newrelic:CreateAlert"
+      ]
+    },
+    "delete": {
+      "permissions": [
+        "newrelic:DeleteAlert"
       ]
     },
     "read": {
@@ -109,12 +54,92 @@
       "permissions": [
         "newrelic:UpdateAlert"
       ]
-    },
-    "delete": {
-      "permissions": [
-        "newrelic:DeleteAlert"
-      ]
     }
   },
-  "additionalProperties": false
+  "primaryIdentifier": [
+    "/properties/NrqlCondition/Id"
+  ],
+  "properties": {
+    "ApiKey": {
+      "description": "A New Relic REST API Key",
+      "type": "string"
+    },
+    "PolicyId": {
+      "description": "Identifier of the New Relic Alert Policy",
+      "type": "integer"
+    },
+    "NrqlCondition": {
+      "properties": {
+        "Enabled": {
+          "description": "This is the status of your alert condition and is optional. The default is false.",
+          "default": false,
+          "type": "boolean"
+        },
+        "ExpectedGroups": {
+          "description": "This is the number of groups you expect to see at any given time. It is used in combination with the OpenViolationOnGroupOverlay option.",
+          "minimum": 1,
+          "type": "integer"
+        },
+        "Id": {
+          "description": "Condition ID Returned from NewRelic",
+          "type": "integer"
+        },
+        "IgnoreOverlap": {
+          "description": "If disabled, New Relic looks for a convergence of groups. If the condition is looking for 2 or more groups, and the returned values cannot be separated into that number of distinct groups, then that will also produce a violation.",
+          "type": "boolean"
+        },
+        "Name": {
+          "description": "This is a title for your condition and will allow you identify it in the New Relics Alerts UI.",
+          "type": "string"
+        },
+        "Nrql": {
+          "properties": {
+            "Query": {
+              "description": "This is the NRQL query that New Relic Alerts monitors as part of a NRQL condition.",
+              "type": "string"
+            },
+            "SinceValue": {
+              "description": "This is the time (in minutes) for the condition to persist before triggering an event.",
+              "maximum": 20,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "RunbookUrl": {
+          "description": "URL to display in notifications.",
+          "type": "string"
+        },
+        "Terms": {
+          "items": {
+            "$ref": "#/definitions/Term"
+          },
+          "type": "array"
+        },
+        "Type": {
+          "description": "This defines the type of metric that will be used for the alert.",
+          "type": "string"
+        },
+        "ValueFunction": {
+          "description": "Function to be applied to the Threshold values.",
+          "enum": ["average", "max", "min", "percent", "sample_size", "total"],
+          "type": "string"
+        },
+        "ViolationTimeLimitSeconds": {
+          "description": "Use to automatically close instance-based violations after the number of seconds specified.",
+          "enum": [3600, 7200, 14400, 28800, 43200, 86400],
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "sourceUrl": "https://github.com/newrelic/cloudformation-partner-integration",
+  "required": [
+    "ApiKey",
+    "PolicyId",
+    "NrqlCondition"
+  ],
+  "typeName": "NewRelic::Alerts::NrqlAlert"
 }
