@@ -1,5 +1,4 @@
 {
-
     "ApiKey": "TestingNonsenseKey",
     "PolicyId": 1,
     "NrqlCondition": {
@@ -8,19 +7,20 @@
         "Name": "TestNRQLCondition",
         "RunbookUrl": "www.example.com/runbook",
         "Enabled": true,
-        "ValueFunction": "string",
+        "ValueFunction": "average",
+        "ViolationTimeLimitSeconds": 3600,
         "Terms": [
             {
-                "Duration": "1",
+                "Duration": 1,
                 "Operator": "above",
-                "Priority": "low",
-                "Threshold": "20",
+                "Priority": "warning",
+                "Threshold": 20,
                 "TimeFunction": "all"
             }
         ],
         "Nrql": {
             "Query": "SELECT count(*) from AwsLambdaInvocationError",
-            "SinceValue": "3"
+            "SinceValue": 3
         }
     }
 }

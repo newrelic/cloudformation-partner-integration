@@ -1,18 +1,18 @@
 package com.newrelic.alerts.nrqlalert;
 
-import software.amazon.cloudformation.proxy.*;
+import static junit.framework.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.newrelic.alerts.nrqlalert.model.NewRelicNrql;
 import com.newrelic.alerts.nrqlalert.model.NewRelicNrqlCondition;
 import com.newrelic.alerts.nrqlalert.model.NewRelicTerm;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static junit.framework.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import software.amazon.cloudformation.proxy.*;
 
 public class ReadHandlerTest {
     private static final String TEST_API_KEY = "testApiKey";
@@ -43,25 +43,30 @@ public class ReadHandlerTest {
 
         NrqlCondition nrqlCondition = new NrqlCondition();
         nrqlCondition.setId(TEST_CONDITION_ID);
-        request.setDesiredResourceState(new ResourceModel(TEST_API_KEY, TEST_POLICY_ID, nrqlCondition));
+        request.setDesiredResourceState(
+                new ResourceModel(TEST_API_KEY, TEST_POLICY_ID, nrqlCondition));
 
-        NewRelicNrqlCondition newRelicNrqlCondition = new NewRelicNrqlCondition(
-                "test condition",
-                TEST_CONDITION_ID,
-                "testType",
-                "http://runbook.example.com",
-                true,
-                0,
-                true,
-                "aValueFunction",
-                Lists.newArrayList(new NewRelicTerm("duration", "op", "priority", "threshold", "timeFn")),
-                new NewRelicNrql("SELECT something", "some time ago")
-        );
+        NewRelicNrqlCondition newRelicNrqlCondition =
+                new NewRelicNrqlCondition(
+                        true,
+                        1,
+                        TEST_CONDITION_ID,
+                        false,
+                        "test condition",
+                        "http://runbook.example.com",
+                        "testType",
+                        "average",
+                        3600,
+                        Lists.newArrayList(new NewRelicTerm(1, "above", "critical", 20d, "all")),
+                        new NewRelicNrql("SELECT something", 3));
         when(mockApiClient.get(anyString(), anyInt(), anyInt())).thenReturn(newRelicNrqlCondition);
 
-        ProgressEvent<ResourceModel, CallbackContext> result = readHandler.handleRequest(proxy, request, context, logger);
+        ProgressEvent<ResourceModel, CallbackContext> result =
+                readHandler.handleRequest(proxy, request, context, logger);
 
         assertEquals(OperationStatus.SUCCESS, result.getStatus());
-        assertEquals(newRelicNrqlCondition, new NewRelicNrqlCondition(result.getResourceModel().getNrqlCondition()));
+        assertEquals(
+                newRelicNrqlCondition,
+                new NewRelicNrqlCondition(result.getResourceModel().getNrqlCondition()));
     }
 }

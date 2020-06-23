@@ -1,10 +1,16 @@
 package com.newrelic.alerts.nrqlalert;
 
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newrelic.alerts.nrqlalert.model.NewRelicNrqlCondition;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Nullable;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
@@ -15,19 +21,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-import javax.annotation.Nullable;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-/**
- * Abstracted client that handles all http interactions.
- */
+/** Abstracted client that handles all http interactions. */
 public class AlertApiClient {
-
     public static final String USER_AGENT = "User-Agent";
     public static final String X_API_KEY = "X-Api-Key";
     public static final String CONTENT_TYPE = "Content-Type";
@@ -39,20 +34,23 @@ public class AlertApiClient {
     private HttpClient httpClient;
     private final ObjectMapper mapper = new ObjectMapper();
 
-
     public AlertApiClient(String url, HttpClient httpClient) {
         this.url = url;
         this.httpClient = httpClient;
     }
 
-    public JSONObject create(NewRelicNrqlCondition newRelicNrqlCondition, String apiKey, int policyId) throws IOException, AlertApiException {
-        HttpPost alertPost = new HttpPost(
-                String.format("%s/policies/%d.json", this.url, policyId)
-        );
+    public JSONObject create(
+            NewRelicNrqlCondition newRelicNrqlCondition, String apiKey, int policyId)
+            throws IOException, AlertApiException {
+        HttpPost alertPost = new HttpPost(String.format("%s/policies/%d.json", this.url, policyId));
         alertPost.addHeader(X_API_KEY, apiKey);
         alertPost.addHeader(USER_AGENT, NR_LAMBDA_RESOURCE_PROVIDER);
         alertPost.addHeader(CONTENT_TYPE, "application/json");
-        alertPost.setEntity(new StringEntity(mapper.writeValueAsString(Collections.singletonMap("nrql_condition", newRelicNrqlCondition))));
+        alertPost.setEntity(
+                new StringEntity(
+                        mapper.writeValueAsString(
+                                Collections.singletonMap(
+                                        "nrql_condition", newRelicNrqlCondition))));
 
         HttpResponse response = this.httpClient.execute(alertPost);
         int statusCode = response.getStatusLine().getStatusCode();
@@ -61,22 +59,30 @@ public class AlertApiClient {
             String message = jsonNode.findValue("title").asText();
             // Consume entity to avoid leaking the connection
             EntityUtils.consume(response.getEntity());
-            throw new AlertApiException(String.format("Failed to create alert condition for policy ID: %d. Error message: '%s'", policyId, message));
+            throw new AlertApiException(
+                    String.format(
+                            "Failed to create alert condition for policy ID: %d. Error message: '%s'",
+                            policyId, message));
         } else {
-            String jsonResponse = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+            String jsonResponse =
+                    EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
             JSONObject alertResponse = new JSONObject(jsonResponse);
             return alertResponse.getJSONObject("nrql_condition");
         }
     }
 
-    public JSONObject update(NewRelicNrqlCondition newRelicNrqlCondition, String apiKey, int conditionId) throws IOException, AlertApiException {
-        HttpPut alertPut = new HttpPut(
-                String.format("%s/%d.json", this.url, conditionId)
-        );
+    public JSONObject update(
+            NewRelicNrqlCondition newRelicNrqlCondition, String apiKey, int conditionId)
+            throws IOException, AlertApiException {
+        HttpPut alertPut = new HttpPut(String.format("%s/%d.json", this.url, conditionId));
         alertPut.addHeader(X_API_KEY, apiKey);
         alertPut.addHeader(USER_AGENT, "NRLambdaResourceProvider");
         alertPut.addHeader(CONTENT_TYPE, "application/json");
-        alertPut.setEntity(new StringEntity(mapper.writeValueAsString(Collections.singletonMap("nrql_condition", newRelicNrqlCondition))));
+        alertPut.setEntity(
+                new StringEntity(
+                        mapper.writeValueAsString(
+                                Collections.singletonMap(
+                                        "nrql_condition", newRelicNrqlCondition))));
 
         HttpResponse response = this.httpClient.execute(alertPut);
         int statusCode = response.getStatusLine().getStatusCode();
@@ -85,18 +91,20 @@ public class AlertApiClient {
             String message = jsonNode.findValue("title").asText();
             // Consume entity to avoid leaking the connection
             EntityUtils.consume(response.getEntity());
-            throw new AlertApiException(String.format("Failed to update alert condition for condition ID: %d. Error message: '%s'", conditionId, message));
+            throw new AlertApiException(
+                    String.format(
+                            "Failed to update alert condition for condition ID: %d. Error message: '%s'",
+                            conditionId, message));
         } else {
-            String jsonResponse = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+            String jsonResponse =
+                    EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
             JSONObject alertResponse = new JSONObject(jsonResponse);
             return alertResponse.getJSONObject("nrql_condition");
         }
     }
 
     public void remove(String apiKey, int conditionId) throws AlertApiException, IOException {
-        HttpDelete delete = new HttpDelete(
-                String.format("%s/%d.json", url, conditionId)
-        );
+        HttpDelete delete = new HttpDelete(String.format("%s/%d.json", url, conditionId));
         delete.addHeader(X_API_KEY, apiKey);
         delete.addHeader(USER_AGENT, NR_LAMBDA_RESOURCE_PROVIDER);
 
@@ -107,11 +115,13 @@ public class AlertApiClient {
             EntityUtils.consume(response.getEntity());
 
             if (statusCode == 401) {
-                throw new AlertApiException(String.format(
-                        "Unauthorized. Failed to delete alert condition with ID: %d. Probably an invalid API key.",
-                        conditionId));
+                throw new AlertApiException(
+                        String.format(
+                                "Unauthorized. Failed to delete alert condition with ID: %d. Probably an invalid API key.",
+                                conditionId));
             } else {
-                throw new AlertApiException(String.format("Failed to delete alert condition with ID: %d", conditionId));
+                throw new AlertApiException(
+                        String.format("Failed to delete alert condition with ID: %d", conditionId));
             }
         }
     }
@@ -132,16 +142,20 @@ public class AlertApiClient {
             EntityUtils.consume(httpResponse.getEntity());
 
             if (statusCode == 401) {
-                throw new AlertApiException(String.format(
-                        "Unauthorized. Failed to list conditions for policy %d. Probably an invalid API key.",
-                        policyId));
+                throw new AlertApiException(
+                        String.format(
+                                "Unauthorized. Failed to list conditions for policy %d. Probably an invalid API key.",
+                                policyId));
             } else {
-                throw new AlertApiException(String.format("Failed to list alert conditions for policy: %d", policyId));
+                throw new AlertApiException(
+                        String.format("Failed to list alert conditions for policy: %d", policyId));
             }
         }
 
-        Map<String, List<NewRelicNrqlCondition>> response = mapper.readValue(httpResponse.getEntity().getContent(),
-                new TypeReference<Map<String, List<NewRelicNrqlCondition>>>() {});
+        Map<String, List<NewRelicNrqlCondition>> response =
+                mapper.readValue(
+                        httpResponse.getEntity().getContent(),
+                        new TypeReference<Map<String, List<NewRelicNrqlCondition>>>() {});
         return response.get("nrql_conditions");
     }
 
@@ -149,6 +163,7 @@ public class AlertApiClient {
         return new Iterator<NewRelicNrqlCondition>() {
             private Iterator<NewRelicNrqlCondition> currentPage;
             private int pageNumber = 1;
+
             @Override
             public boolean hasNext() {
                 try {
@@ -173,14 +188,16 @@ public class AlertApiClient {
         };
     }
 
-    public NewRelicNrqlCondition get(String apiKey, int policyId, int conditionId) throws AlertApiException {
-        //There's no get-by-id API, so fake it with list.
+    public NewRelicNrqlCondition get(String apiKey, int policyId, int conditionId)
+            throws AlertApiException {
+        // There's no get-by-id API, so fake it with list.
         for (Iterator<NewRelicNrqlCondition> it = listAll(apiKey, policyId); it.hasNext(); ) {
             NewRelicNrqlCondition condition = it.next();
             if (condition.getId().equals(conditionId)) {
                 return condition;
             }
         }
-        throw new AlertApiException(String.format("Could not find condition %d in policy %d", conditionId, policyId));
+        throw new AlertApiException(
+                String.format("Could not find condition %d in policy %d", conditionId, policyId));
     }
 }

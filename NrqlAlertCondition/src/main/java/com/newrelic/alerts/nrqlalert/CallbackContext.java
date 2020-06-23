@@ -7,6 +7,4 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Builder
-public class CallbackContext {
-
-}
+public class CallbackContext {}

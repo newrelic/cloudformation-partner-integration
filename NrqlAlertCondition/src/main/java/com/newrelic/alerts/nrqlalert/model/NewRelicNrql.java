@@ -14,10 +14,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class NewRelicNrql {
-
     private String query;
+    private Integer sinceValue;
 
-    private String sinceValue;
     public NewRelicNrql(Nrql modelNrql) {
         this.setQuery(modelNrql.getQuery());
         this.setSinceValue(modelNrql.getSinceValue());
