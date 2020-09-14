@@ -10,6 +10,7 @@
             "newrelic",
             "alerts",
             "nrqlalert"
-        ]
+        ],
+        "protocolVersion": "2.0.0"
     }
 }
