@@ -1,4 +1,6 @@
-# cloudformation-partner-integration
-Integration with AWS Cloudformation
+[![Archived header](https://github.com/newrelic/opensource-website/raw/main/src/images/categories/Archived.png)](https://opensource.newrelic.com/oss-category/#archived)
 
-[Documentation available at docs.newrelic.com.](https://docs.newrelic.com/docs/integrations/amazon-integrations/aws-integrations-list/aws-cloudformation-integration)
+
+# cloudformation-partner-integration
+An early example of how one might integrate New Relic Alerts with AWS Cloudformation
+
